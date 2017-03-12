@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shapes"
+    android:orientation="horizontal"
+    android:padding="@dimen/text_margin"
+    android:layout_gravity="center">
+
+
+    <TextView
+        android:id="@+id/contentWork"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_alarm_add_black_24dp"
+        android:text="Add new routine"
+        android:foregroundGravity="center"
+        android:textAppearance="?attr/textAppearanceListItem" />
+
+
+</LinearLayout>

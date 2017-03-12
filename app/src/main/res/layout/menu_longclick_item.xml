@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:weightSum="100">
+    <Button
+        android:layout_margin="0dp"
+        android:padding="0dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="50"
+        android:text="Edit"
+        android:id="@+id/btnEditItem"/>
+    <Button
+        android:layout_margin="0dp"
+        android:padding="0dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="50"
+        android:text="Remove"
+        android:id="@+id/btnRemoveItem"/>
+
+
+</LinearLayout>
