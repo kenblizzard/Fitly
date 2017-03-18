@@ -1,0 +1,50 @@
+{
+  "project_info": {
+    "project_number": "535228934046",
+    "firebase_url": "https://project--6402215288375232758.firebaseio.com",
+    "project_id": "project--6402215288375232758",
+    "storage_bucket": "project--6402215288375232758.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:535228934046:android:be2bcbefb0c6f4f6",
+        "android_client_info": {
+          "package_name": "io.github.kenblizzard.fitly"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "535228934046-ac6su2bq3j86aq3kvs8unch7f132vse0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "io.github.kenblizzard.fitly",
+            "certificate_hash": "226dbd30d918df3447fb8e73696335ec10b4ff26"
+          }
+        },
+        {
+          "client_id": "535228934046-mtbevp59dqq2vco1ohu797gbd20dt9k5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqkGAey0IdYixJGsrrbF_GemlXjv7xkts"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

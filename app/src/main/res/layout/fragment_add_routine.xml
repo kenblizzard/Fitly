@@ -25,11 +25,12 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
+            android:textAlignment="viewEnd"
             android:text="Label:" />
 
         <EditText
             android:id="@+id/editLabel"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="7"
             android:inputType="textCapWords"
@@ -106,7 +107,7 @@
             android:layout_weight="4"
             android:hint="@string/seconds"
             android:inputType="number"
-            android:maxLength="3" />
+            android:maxLength="2" />
     </LinearLayout>
 
     <!--<Button-->

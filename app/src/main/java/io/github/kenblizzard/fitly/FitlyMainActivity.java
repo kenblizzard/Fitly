@@ -7,6 +7,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,11 +16,19 @@ import android.widget.EditText;
 import android.widget.TabHost;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 public class FitlyMainActivity extends AppCompatActivity implements RoutineListFragment.OnRoutineLisFragmentInteractionListener {
 
     private TimerFragment timerFragment;
     private RoutineListFragment routineListFragment;
     private TabHost tabHost;
+
+    private AdView mAdView;
+
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +66,50 @@ public class FitlyMainActivity extends AppCompatActivity implements RoutineListF
         fragmentTransaction.commit();
 
 
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
+        mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+                .build();
+        mAdView.loadAd(adRequest);
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Fitly");
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "On create");
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
     }
+
+
+    @Override
+    public void onPause() {
+        if (mAdView != null) {
+            mAdView.pause();
+        }
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mAdView != null) {
+            mAdView.resume();
+
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Fitly");
+            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "On create");
+            mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
+        super.onDestroy();
+    }
+
 
     @Override
     public void onRoutineListItemClick(Routine rtn) {
@@ -66,7 +118,7 @@ public class FitlyMainActivity extends AppCompatActivity implements RoutineListF
     }
 
     @Override
-    public void onRoutineListItemLongPressed(Routine rtn, final int position) {
+    public void onRoutineListItemLongPressed(final Routine rtn, final int position) {
         final View view = getLayoutInflater().inflate(R.layout.menu_longclick_item, null);
 
         final AlertDialog alertDialog = new AlertDialog.Builder(this).setTitle("Select action for: \n" + rtn.getLabel()).setView(view).show();
@@ -80,7 +132,54 @@ public class FitlyMainActivity extends AppCompatActivity implements RoutineListF
                 String removedRoutine = DataHandler.removeRoutine(position);
                 routineListFragment.reloadList();
                 alertDialog.cancel();
-                Toast.makeText(getApplicationContext(), "Successfully removed " + removedRoutine,Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Successfully removed " + removedRoutine, Toast.LENGTH_LONG).show();
+            }
+        });
+
+
+        btnEditItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                final View editView = getLayoutInflater().inflate(R.layout.fragment_add_routine, null);
+
+                final EditText tvLabel = (EditText) editView.findViewById(R.id.editLabel);
+                final EditText tvWork = (EditText) editView.findViewById(R.id.editWork);
+                final EditText tvRest = (EditText) editView.findViewById(R.id.editRest);
+                final EditText tvReps = (EditText) editView.findViewById(R.id.editReps);
+
+                Log.d("kenneth",rtn.getLabel());
+                tvLabel.setText(rtn.getLabel());
+                tvWork.setText(rtn.duration + "");
+                tvRest.setText(rtn.rest + "");
+                tvReps.setText(rtn.reps + "");
+
+
+                new AlertDialog.Builder(alertDialog.getContext())
+                        .setTitle("Edit routine")
+                        .setView(editView)
+                        .setPositiveButton("Update",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,
+                                                        int whichButton) {
+
+
+                                        Routine toEdit = new Routine();
+                                        toEdit.createRoutine(tvLabel.getText() + "", "",
+                                                Integer.parseInt(tvWork.getText() + ""),
+                                                Integer.parseInt(tvReps.getText() + ""),
+                                                Integer.parseInt(tvRest.getText() + "")
+                                        );
+
+                                        DataHandler.editRoutine(toEdit, position);
+                                        routineListFragment.reloadList();
+                                        Toast.makeText(getApplicationContext(), "Updated: " + toEdit.getLabel(), Toast.LENGTH_SHORT).show();
+                                        alertDialog.cancel();
+                                    }
+                                })
+                        .setNegativeButton("Cancel", null)
+                        .show();
+
             }
         });
     }

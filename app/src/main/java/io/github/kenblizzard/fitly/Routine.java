@@ -30,6 +30,7 @@ public class Routine implements Serializable{
         this.duration = duration;
         this.reps = reps;
         this.rest = rest;
+        this.dateCreated = new Date();
         this.listTimeSet = this.createSets(duration, reps, rest);
 
 

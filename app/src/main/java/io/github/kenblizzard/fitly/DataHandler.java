@@ -46,6 +46,14 @@ public class DataHandler {
         return strRemoved;
     }
 
+    public static Routine editRoutine(Routine rtn, int position) {
+        Routine toEdit = listRoutines.get(position);
+
+        toEdit.createRoutine(rtn.getLabel(), rtn.getDescription(), rtn.duration, rtn.reps, rtn.rest);
+
+        return toEdit;
+    }
+
     public static Routine getRoutine(int index) {
         return listRoutines.get(index);
     }
@@ -97,16 +105,16 @@ public class DataHandler {
         listRoutines = new ArrayList<>();
 //        listRoutines = getRoutineObject();
         Routine rtn = new Routine();
-        rtn.createRoutine("Push ups", "push ups", 5, 2, 10);
+        rtn.createRoutine("Push-Ups", "push ups", 60, 3, 180);
         listRoutines.add(rtn);
 
         Routine rtn2 = new Routine();
-        rtn2.createRoutine("Inclined Barbell Press", "plank", 10, 3, 5);
+        rtn2.createRoutine("Deadlift", "plank", 60, 3, 120);
         listRoutines.add(rtn2);
 
 
         Routine rtn3 = new Routine();
-        rtn3.createRoutine("dumbell fly", "", 5, 2, 8);
+        rtn3.createRoutine("Curls-Up", "", 30, 4, 20);
         listRoutines.add(rtn3);
     }
 

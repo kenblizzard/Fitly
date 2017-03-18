@@ -23,6 +23,8 @@ public class TimerFragment extends Fragment {
     private Button btnStart;
     private Chronometer chrono;
     private MediaPlayer mp;
+    private MediaPlayer mpRest;
+
     private TextView tvRest;
     private LinearLayout layoutMain;
     private ViewPager mViewPager;
@@ -89,6 +91,7 @@ public class TimerFragment extends Fragment {
         btnStart = (Button) view.findViewById(R.id.button);
         chrono = (Chronometer) view.findViewById(R.id.chronometer2);
         mp = MediaPlayer.create(getContext(), R.raw.beep);
+        mpRest = MediaPlayer.create(getContext(), R.raw.rest_beep);
 
         btnStart.setOnClickListener(clickStart);
 
@@ -141,7 +144,12 @@ public class TimerFragment extends Fragment {
             if (((totalElapsedSeconds == ts.getDuration() + 1 && ts.getIsRest()) ||
                     (totalElapsedSeconds == ts.getRest() + 1 && !ts.getIsRest()))
                     && !isStart) {
-                mp.start();
+
+                if(!ts.getIsRest()) {
+                    mp.start();
+                }else {
+                    mpRest.start();
+                }
 
                 chrono.stop();
 
@@ -174,12 +182,13 @@ public class TimerFragment extends Fragment {
                 btnStart.setText("STOP!");
                 chrono.setBase(SystemClock.elapsedRealtime());
                 chrono.start();
+                isStart = !isStart;
 
             } else {
                 btnStart.setText("START!");
                 stopTimer();
             }
-            isStart = !isStart;
+
 
         }
 
