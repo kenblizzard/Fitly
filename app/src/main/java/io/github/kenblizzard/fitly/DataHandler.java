@@ -18,8 +18,10 @@ import java.util.ArrayList;
 public class DataHandler {
 
     private static final String FILENAME = "fitly_routines.obj"; //file not found
-    private static final String FILE_DIR = "/data/data/fitly";
+    private static final String FILE_DIR = "data";
     public static ArrayList<Routine> listRoutines;
+
+    private static File listRoutineFile;
 
     public static ArrayList<Routine> getRoutines() {
         return listRoutines;
@@ -63,12 +65,12 @@ public class DataHandler {
     }
 
     public static void commit() {
-        File f = new File("/Android/data/fitly");
-        f.mkdirs();
+
+
         ObjectOutput out = null;
 
         try {
-            out = new ObjectOutputStream(new FileOutputStream(new File(FILE_DIR + File.separator + FILENAME)));
+            out = new ObjectOutputStream(new FileOutputStream(new File(listRoutineFile, FILENAME)));
             out.writeObject(listRoutines);
             out.close();
         } catch (FileNotFoundException e) {
@@ -79,13 +81,14 @@ public class DataHandler {
     }
 
     private static ArrayList<Routine> getRoutineObject() {
+
+
         ObjectInputStream input;
         listRoutines = new ArrayList<>();
 
         try {
-            input = new ObjectInputStream(new FileInputStream(new File(FILE_DIR + File.separator + FILENAME)));
+            input = new ObjectInputStream(new FileInputStream(new File(listRoutineFile, FILENAME)));
             listRoutines = (ArrayList<Routine>) input.readObject();
-
             input.close();
         } catch (StreamCorruptedException e) {
             e.printStackTrace();
@@ -101,21 +104,31 @@ public class DataHandler {
 
     }
 
-    public static void createRoutines() {
-        listRoutines = new ArrayList<>();
-//        listRoutines = getRoutineObject();
-        Routine rtn = new Routine();
-        rtn.createRoutine("Push-Ups", "push ups", 60, 3, 180);
-        listRoutines.add(rtn);
+    public static void createRoutines(File file) {
 
-        Routine rtn2 = new Routine();
-        rtn2.createRoutine("Deadlift", "plank", 60, 3, 120);
-        listRoutines.add(rtn2);
+        if (listRoutineFile == null) {
+            listRoutineFile = new File(file, FILE_DIR);
+            listRoutineFile.mkdir();
+        }
 
 
-        Routine rtn3 = new Routine();
-        rtn3.createRoutine("Curls-Up", "", 30, 4, 20);
-        listRoutines.add(rtn3);
+        listRoutines = getRoutineObject();
+
+        if (listRoutines.size() == 0) {
+            listRoutines = new ArrayList<>();
+            Routine rtn = new Routine();
+            rtn.createRoutine("Push-Ups", "push ups", 60, 3, 180);
+            listRoutines.add(rtn);
+
+            Routine rtn2 = new Routine();
+            rtn2.createRoutine("Deadlift", "plank", 60, 3, 120);
+            listRoutines.add(rtn2);
+
+
+            Routine rtn3 = new Routine();
+            rtn3.createRoutine("Curls-Up", "", 30, 4, 20);
+            listRoutines.add(rtn3);
+        }
     }
 
 

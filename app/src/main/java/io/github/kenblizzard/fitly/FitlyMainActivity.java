@@ -1,7 +1,9 @@
 package io.github.kenblizzard.fitly;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -16,6 +18,7 @@ import android.widget.EditText;
 import android.widget.TabHost;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -28,18 +31,17 @@ public class FitlyMainActivity extends AppCompatActivity implements RoutineListF
 
     private AdView mAdView;
 
-    private FirebaseAnalytics mFirebaseAnalytics;
+    public static FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        DataHandler.createRoutines();
+        DataHandler.createRoutines(getCacheDir());
         setContentView(R.layout.activity_fitly_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
         tabHost = (TabHost) findViewById(R.id.tabhost);
 
@@ -70,14 +72,39 @@ public class FitlyMainActivity extends AppCompatActivity implements RoutineListF
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         mAdView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder()
-                .build();
-        mAdView.loadAd(adRequest);
+
+
+        mAdView.setAdListener(new AdListener() {
+
+            @Override
+            public void onAdLoaded() {
+                mAdView.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAdFailedToLoad(int error) {
+                mAdView.setVisibility(View.GONE);
+            }
+
+        });
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                AdRequest adRequest = new AdRequest.Builder()
+                        .build();
+                mAdView.loadAd(adRequest);
+            }
+        }, 3000);
 
         Bundle bundle = new Bundle();
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Fitly");
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "On create");
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+
+        Intent intent = new Intent(this, SignInActivity.class);
+        startActivity(intent);
     }
 
 
@@ -132,6 +159,7 @@ public class FitlyMainActivity extends AppCompatActivity implements RoutineListF
                 String removedRoutine = DataHandler.removeRoutine(position);
                 routineListFragment.reloadList();
                 alertDialog.cancel();
+                DataHandler.commit();
                 Toast.makeText(getApplicationContext(), "Successfully removed " + removedRoutine, Toast.LENGTH_LONG).show();
             }
         });
@@ -148,7 +176,7 @@ public class FitlyMainActivity extends AppCompatActivity implements RoutineListF
                 final EditText tvRest = (EditText) editView.findViewById(R.id.editRest);
                 final EditText tvReps = (EditText) editView.findViewById(R.id.editReps);
 
-                Log.d("kenneth",rtn.getLabel());
+                Log.d("kenneth", rtn.getLabel());
                 tvLabel.setText(rtn.getLabel());
                 tvWork.setText(rtn.duration + "");
                 tvRest.setText(rtn.rest + "");
@@ -163,17 +191,23 @@ public class FitlyMainActivity extends AppCompatActivity implements RoutineListF
                                     public void onClick(DialogInterface dialog,
                                                         int whichButton) {
 
+                                        int x, y, z;
+                                        String label = tvLabel.getText().length() > 0 ? tvLabel.getText() + "" : "Untitled";
+                                        x = tvWork.getText().length() > 0 ? Integer.parseInt(tvWork.getText() + "") : 0;
+                                        y = tvReps.getText().length() > 0 ? Integer.parseInt(tvReps.getText() + "") : 0;
+                                        z = tvRest.getText().length() > 0 ? Integer.parseInt(tvRest.getText() + "") : 0;
 
                                         Routine toEdit = new Routine();
-                                        toEdit.createRoutine(tvLabel.getText() + "", "",
-                                                Integer.parseInt(tvWork.getText() + ""),
-                                                Integer.parseInt(tvReps.getText() + ""),
-                                                Integer.parseInt(tvRest.getText() + "")
+                                        toEdit.createRoutine(label, "",
+                                                x,
+                                                y,
+                                                z
                                         );
 
                                         DataHandler.editRoutine(toEdit, position);
                                         routineListFragment.reloadList();
                                         Toast.makeText(getApplicationContext(), "Updated: " + toEdit.getLabel(), Toast.LENGTH_SHORT).show();
+                                        DataHandler.commit();
                                         alertDialog.cancel();
                                     }
                                 })
@@ -187,19 +221,14 @@ public class FitlyMainActivity extends AppCompatActivity implements RoutineListF
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.menu_add_routine) {
             this.add();
         }
@@ -224,15 +253,23 @@ public class FitlyMainActivity extends AppCompatActivity implements RoutineListF
                                 final EditText tvRest = (EditText) addView.findViewById(R.id.editRest);
                                 final EditText tvReps = (EditText) addView.findViewById(R.id.editReps);
 
+                                int x, y, z;
+                                String label = tvLabel.getText().length() > 0 ? tvLabel.getText() + "" : "Untitled";
+                                x = tvWork.getText().length() > 0 ? Integer.parseInt(tvWork.getText() + "") : 0;
+                                y = tvReps.getText().length() > 0 ? Integer.parseInt(tvReps.getText() + "") : 0;
+                                z = tvRest.getText().length() > 0 ? Integer.parseInt(tvRest.getText() + "") : 0;
+
                                 Routine rtn = new Routine();
-                                rtn.createRoutine(tvLabel.getText() + "", "",
-                                        Integer.parseInt(tvWork.getText() + ""),
-                                        Integer.parseInt(tvReps.getText() + ""),
-                                        Integer.parseInt(tvRest.getText() + "")
+                                rtn.createRoutine(label, "",
+                                        x,
+                                        y,
+                                        z
                                 );
 
                                 DataHandler.addRoutine(rtn);
                                 routineListFragment.reloadList();
+                                DataHandler.commit();
+
                                 Toast.makeText(getApplicationContext(), "Added: " + rtn.getLabel(), Toast.LENGTH_SHORT).show();
                             }
                         })

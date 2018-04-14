@@ -2,9 +2,10 @@
 <resources>
     <color name="colorPrimary">#17949b</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#870000</color>
+    <color name="colorAccent">#172b49</color>
     <color name="colorWork">#98fc8f</color>
     <color name="colorRest">#fc9f8f</color>
+    <color name="colorReady">#fcef8f</color>
     <color name="rippleColour">#17949b</color>
     <color name="backgroundColour">#000000</color>
 </resources>

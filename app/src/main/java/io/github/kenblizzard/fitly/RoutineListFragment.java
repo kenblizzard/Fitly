@@ -184,7 +184,7 @@ public class RoutineListFragment extends ListFragment {
             mIdView.setText(mItem.getLabel());
             mContentView.setText(mItem.duration + "s");
             mContentRest.setText(mItem.rest + "s");
-            mContentReps.setText(mItem.reps + "X");
+            mContentReps.setText(mItem.reps + "");
         }
 
         @Override

@@ -4,15 +4,8 @@
     android:orientation="vertical"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
-    android:weightSum="60">
+    android:weightSum="50">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_weight="10"
-        android:text="Set Timer"
-        android:textAlignment="center" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,101 +14,104 @@
         android:orientation="horizontal"
         android:weightSum="10">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:textAlignment="viewEnd"
-            android:text="Label:" />
 
         <EditText
             android:id="@+id/editLabel"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="7"
+            android:hint="Descriptive label"
             android:inputType="textCapWords"
             android:maxLength="30" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="10"
+        android:layout_height="match_parent"
         android:orientation="horizontal"
         android:weightSum="10">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="4"
-            android:text="Work:"
-            android:textAlignment="center" />
 
-        <EditText
-            android:id="@+id/editWork"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:hint="@string/seconds"
-            android:inputType="number"
-            android:maxLength="3" />
+            android:layout_weight="5"
+            android:orientation="horizontal"
+            android:weightSum="10">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:drawableEnd="@drawable/ic_fitness_center_black_24px"
+                android:padding="10dp"
+                android:text=""
+                android:textAlignment="viewStart" />
+
+            <EditText
+                android:id="@+id/editWork"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="7"
+                android:hint="@string/seconds"
+                android:inputType="number"
+                android:maxLength="3" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:orientation="horizontal"
+            android:weightSum="10">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:drawableEnd="@drawable/ic_pan_tool_black_24dp"
+                android:padding="10dp"
+                android:text=""
+                android:textAlignment="viewStart" />
+
+
+            <EditText
+                android:id="@+id/editRest"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="7"
+                android:hint="@string/seconds"
+                android:inputType="number"
+                android:maxLength="3" />
+        </LinearLayout>
     </LinearLayout>
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="10"
+        android:layout_height="match_parent"
         android:orientation="horizontal"
         android:weightSum="10">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="4"
-            android:text="Rest:"
-            android:textAlignment="center" />
-
-
-        <EditText
-            android:id="@+id/editRest"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:hint="@string/seconds"
-            android:inputType="number"
-            android:maxLength="3" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="10"
-        android:orientation="horizontal"
-        android:weightSum="10">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="4"
-            android:text="No. of sets:"
-            android:textAlignment="center" />
+            android:layout_weight="1.5"
+            android:drawableLeft="@drawable/ic_close_black_24dp"
+            android:padding="10dp"
+            android:text=""
+            android:textAlignment="viewStart" />
 
         <EditText
             android:id="@+id/editReps"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:hint="@string/seconds"
+            android:layout_weight="3.5"
+            android:hint="@string/sets"
             android:inputType="number"
             android:maxLength="2" />
     </LinearLayout>
 
-    <!--<Button-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_weight="10"-->
-    <!--android:text="save"-->
-    <!--android:layout_gravity="center"-->
-    <!--android:id="@+id/btnSaveRoutine"/>-->
+
 
 </LinearLayout>
