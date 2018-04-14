@@ -6,6 +6,7 @@ import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 /**
  * Created by Ken on 3/4/2017.
@@ -24,6 +27,8 @@ public class TimerFragment extends Fragment {
     private Chronometer chrono;
     private MediaPlayer mp;
     private MediaPlayer mpRest;
+    private MediaPlayer mpReadyStart;
+    private MediaPlayer mpBeepCountdown;
 
     private TextView tvRest;
     private LinearLayout layoutMain;
@@ -35,6 +40,7 @@ public class TimerFragment extends Fragment {
     private TextView timerReps;
 
     private boolean isStart = true;
+    private boolean isReadyCount = false;
     private Routine routine;
     private TimeSet ts;
 
@@ -90,8 +96,10 @@ public class TimerFragment extends Fragment {
 
         btnStart = (Button) view.findViewById(R.id.button);
         chrono = (Chronometer) view.findViewById(R.id.chronometer2);
-        mp = MediaPlayer.create(getContext(), R.raw.beep);
-        mpRest = MediaPlayer.create(getContext(), R.raw.rest_beep);
+        mp = MediaPlayer.create(getContext(), R.raw.beep_countdown);
+        mpRest = MediaPlayer.create(getContext(), R.raw.beep_countdown);
+        mpReadyStart = MediaPlayer.create(getContext(), R.raw.ready_start_beep);
+        mpBeepCountdown = MediaPlayer.create(getContext(), R.raw.beep_countdown);
 
         btnStart.setOnClickListener(clickStart);
 
@@ -119,7 +127,7 @@ public class TimerFragment extends Fragment {
         chrono.stop();
         chrono.setBase(SystemClock.elapsedRealtime());
         btnStart.setText(R.string.btn_start);
-        tvRest.setText("Press 'START!' when you are ready");
+        tvRest.setText("Press 'START' when you are ready");
         layoutMain.setBackgroundColor(0);
     }
 
@@ -140,6 +148,19 @@ public class TimerFragment extends Fragment {
             // routine.getListTimeSet();
             ts = routine.getListTimeSet().get(index);
 
+            if(!isReadyCount && totalElapsedSeconds <= 5 && !isStart) {
+                tvRest.setText(R.string.txt_ready);
+                layoutMain.setBackgroundColor(getResources().getColor(R.color.colorReady));
+                return;
+            }
+
+            else if(!isReadyCount && totalElapsedSeconds > 5 && !isStart){
+
+                chrono.setBase(SystemClock.elapsedRealtime());
+                isReadyCount = true;
+                mpReadyStart.start();
+                return;
+            }
 
             if (((totalElapsedSeconds == ts.getDuration() + 1 && ts.getIsRest()) ||
                     (totalElapsedSeconds == ts.getRest() + 1 && !ts.getIsRest()))
@@ -147,6 +168,7 @@ public class TimerFragment extends Fragment {
 
                 if(!ts.getIsRest()) {
                     mp.start();
+                    isReadyCount = false;
                 }else {
                     mpRest.start();
                 }
@@ -179,14 +201,21 @@ public class TimerFragment extends Fragment {
         @Override
         public void onClick(View v) {
             if (isStart) {
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, tv.getText().toString());
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Start");
+                FitlyMainActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+                isStart = !isStart;
+                isReadyCount = false;
                 btnStart.setText("STOP!");
                 chrono.setBase(SystemClock.elapsedRealtime());
                 chrono.start();
-                isStart = !isStart;
+
 
             } else {
                 btnStart.setText("START!");
                 stopTimer();
+                isReadyCount = false;
             }
 
 

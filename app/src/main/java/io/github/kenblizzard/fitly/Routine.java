@@ -43,7 +43,7 @@ public class Routine implements Serializable{
         boolean isRest = true;
         int totalSets = reps * 2;
 
-        for(int i = 0; i <= totalSets; i++) {
+        for(int i = 0; i < totalSets ; i++) {
             ts = new TimeSet(duration, rest,isRest);
             isRest = !isRest;
             listSets.add(ts);

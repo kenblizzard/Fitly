@@ -16,7 +16,7 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         app:layout_scrollFlags="scroll|enterAlways"
-        app:popupTheme="@style/AppTheme.PopupOverlay">
+        app:popupTheme="@style/AppTheme.AppBarOverlay">
 
 
     </android.support.v7.widget.Toolbar>
@@ -24,7 +24,6 @@
     <TabHost
         android:id="@+id/tabhost"
         android:layout_width="fill_parent"
-
         android:layout_height="fill_parent"
         android:weightSum="100">
 
@@ -75,8 +74,9 @@
                 android:id="@+id/adView"
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
-                android:layout_weight="8"
+                android:layout_weight="9"
                 ads:adSize="BANNER"
+                android:visibility="gone"
                 android:layout_gravity="bottom"
                 ads:adUnitId="@string/banner_home_footer"></com.google.android.gms.ads.AdView>
         </LinearLayout>
